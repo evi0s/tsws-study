@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="text" id="msg" />
+<input type="button" value="发送" id="submit" />
+<input type="button" value="关闭" id="close" />
+
+<script type="text/javascript">
+    let CreateWebSocket = (function () {
+        return function (urlValue) {
+            if (window.WebSocket) return new WebSocket(urlValue);
+            if (window.MozWebSocket) return new MozWebSocket(urlValue);
+            return false;
+        }
+    })();
+    let webSocket = CreateWebSocket("ws://127.0.0.1:3000/websocket");
+    webSocket.onopen = function (evt) {
+        webSocket.send("Hand Shake")
+    };
+    webSocket.onmessage = function (evt) {
+        console.log("Server Msg: " + evt.data)
+    };
+
+    webSocket.onclose = function (evt) {
+        console.log("Connection closed.")
+    };
+
+    document.getElementById("submit").onclick = function () {
+        let str = document.getElementById("msg").value;
+        webSocket.send(str)
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Screen</title>
+</head>
+<body>
+<textarea id="msgbox" style="margin: 5px; width: 479px; height: 519px;">
+
+</textarea>
+
+<script type="text/javascript">
+    let CreateWebSocket = (function () {
+        return function (urlValue) {
+            if (window.WebSocket) return new WebSocket(urlValue);
+            if (window.MozWebSocket) return new MozWebSocket(urlValue);
+            return false;
+        }
+    })();
+    let webSocket = CreateWebSocket("ws://127.0.0.1:3000/websocket");
+    webSocket.onopen = function (evt) {
+        console.log("OK");
+    };
+    webSocket.onmessage = function (evt) {
+        console.log("Server Msg:" + evt.data);
+        let msgbox = document.getElementById("msgbox");
+        console.log(msgbox.value);
+        msgbox.value = msgbox.value + '\n' + evt.data;
+    };
+    webSocket.onclose = function (evt) {
+        console.log("Connection closed.")
+    };
+</script>
+</body>
+</html>
