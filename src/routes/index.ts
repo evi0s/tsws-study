@@ -24,7 +24,7 @@ indexRouter.all('/websocket', (ctx) => {
         console.log(message);
         for(let i = 0; i < conversationList.length; i++) {
             if (ctx == conversationList[i]) continue;
-            conversationList[i].ctx.websocket.send(message);
+            conversationList[i].ctx.websocket.send(xss(message));
         }
         //ctx.websocket.broadcast(message);
     });
