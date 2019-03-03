@@ -1,35 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Screen</title>
+    <title>Socket.IO chat</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
 </head>
 <body>
-<textarea id="msgbox" style="margin: 5px; width: 479px; height: 519px;">
-
-</textarea>
-
-<script type="text/javascript">
-    let CreateWebSocket = (function () {
-        return function (urlValue) {
-            if (window.WebSocket) return new WebSocket(urlValue);
-            if (window.MozWebSocket) return new MozWebSocket(urlValue);
-            return false;
-        }
-    })();
-    let webSocket = CreateWebSocket("ws://127.0.0.1:3000/websocket");
-    webSocket.onopen = function (evt) {
-        console.log("OK");
-    };
-    webSocket.onmessage = function (evt) {
-        console.log("Server Msg:" + evt.data);
-        let msgbox = document.getElementById("msgbox");
-        console.log(msgbox.value);
-        msgbox.value = msgbox.value + '\n' + evt.data;
-    };
-    webSocket.onclose = function (evt) {
-        console.log("Connection closed.")
-    };
+<ul id="messages"></ul>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://cdn.bootcss.com/socket.io/2.2.0/socket.io.js"></script>
+<script>
+    $(function () {
+        let socket = io();
+        socket.on('broadcast', (message) => {
+            console.log("Server Msg: " + message);
+            $('#messages').append($('<li>').text(message));
+        });
+    });
 </script>
 </body>
 </html>
