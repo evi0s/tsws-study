@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Join</title>
+</head>
+<body>
+<center>
+    <form>
+        <p>进入房间</p>
+        <input id="roomId" />
+    </form>
+    <br/>
+    <button id="submit">Join! </button>
+</center>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+    $(() => {
+        $('#submit').click(() => {
+            $.post('/join', {
+                roomId:  $('#roomId').val()
+            }, (result) => {
+                console.log("Login: " + result);
+                setTimeout(() => {
+                    window.location = '/index.html'
+                }, 1500)
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title>Emitter!</title>
+</head>
+<body>
+<center>
+    <h1>
+        Emitter
+    </h1>
+    <form>
+        <p>Send Message</p>
+        <input id='message' />
+        <p>Time Interval(ms)</p>
+        <input id='time' />
+    </form>
+    <hr/>
+    <button id='emit'>Emit!</button>
+    <button id='stop'>Stop </button>
+</center>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://cdn.bootcss.com/socket.io/2.2.0/socket.io.js"></script>
+<script>
+    $(() => {
+        let socket = io('ws://127.0.0.1');
+        let Interval;
+        $('#emit').click(() => {
+            Interval = setInterval(() => {
+                socket.emit('sendMsg', $('#message').val())
+            }, parseInt($('#time').val()))
+        });
+
+        socket.on('getMsg', (msg) => {
+            console.log(msg);
+        });
+
+        $('#stop').click(() => {
+            clearInterval(Interval);
+        });
+    })
+</script>
+</body>
+
+</html>

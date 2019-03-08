@@ -1,48 +1,41 @@
 import * as Router from 'koa-router';
 import * as xss from 'xss';
 
+
 const indexRouter = new Router();
 
-let conversationList: any[] = [];
 
-class Conversation {
-    public ctx: any;
-    constructor (ctx: any) {
-        this.ctx = ctx;
+indexRouter.post('/login', (ctx) => {
+   let username = ctx.request.body.username;
+   let password = ctx.request.body.password;
+
+   if (username == 'admin' && password == 'admin') {
+       ctx.session.name = username;
+       ctx.session.signined = true;
+       ctx.body = username;
+       return;
+   }
+   ctx.body = 'failed';
+});
+
+indexRouter.post('/joinRoom', (ctx) => {
+    let roomId = ctx.request.body.roomId;
+    console.log(roomId);
+    ctx.session.roomId = roomId;
+    ctx.body = roomId;
+});
+
+indexRouter.delete('/exit', (ctx) => {
+    ctx.session.roomId = null;
+    ctx.body = 'OK';
+});
+
+indexRouter.get('/status', (ctx) => {
+    if (! ctx.session || ctx.session == null || ! ctx.session.signined) {
+        ctx.body = 'null';
+        return;
     }
-}
-
-function send(msg: any) {
-    conversationList.forEach((conversation, index, conversationList) => {
-        conversation.ctx.websocket.send(msg);
-    });
-}
-
-// indexRouter.all('/websocket', (ctx) => {
-//     conversationList.push(new Conversation(ctx));
-//     console.log(ctx.websocket.readyState);
-//     if (ctx.websocket.readyState != 1) {
-//         ctx.websocket.close();
-//         ctx.websocket.terminate();
-//         return;
-//     }
-//     ctx.websocket.on('message', (message: any) => {
-//         console.log(message);
-//         for(let i = 0; i < conversationList.length; i++) {
-//             if (ctx == conversationList[i])
-//                 continue;
-//             if (conversationList[i].ctx.websocket.readyState != 1) {
-//                 console.log(conversationList[i].ctx.websocket.readyState);
-//                 continue;
-//             }
-//
-//             conversationList[i].ctx.websocket.send(xss(message));
-//         }
-//     });
-//     ctx.websocket.on("close", (message: any) => {
-//         let index = conversationList.indexOf(ctx);
-//         conversationList.splice(index, 1);
-//     });
-// });
+    ctx.body = ctx.session.name;
+});
 
 export { indexRouter }

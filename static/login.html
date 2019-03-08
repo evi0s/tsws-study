@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<center>
+    <form>
+        <p>用户名</p>
+        <input id="username" />
+        <p>密码</p>
+        <input id="password" />
+
+    </form>
+    <br/>
+    <button id="submit">登陆</button>
+</center>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+    $(() => {
+       $('#submit').click(() => {
+           $.post('/login', {
+               username:  $('#username').val(),
+               password:  $('#password').val()
+           }, (result) => {
+               console.log("Login: " + result);
+               setTimeout(() => {
+                    window.location = '/index.html';
+               }, 2000);
+           });
+       });
+    });
+</script>
+</body>
+</html>

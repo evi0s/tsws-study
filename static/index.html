@@ -14,8 +14,12 @@
     </style>
 </head>
 <body>
+<div style="position: fixed; bottom: 100px; width: 50%;">
+    <input id="roomid" autocomplete="off" /><button id="id">Join</button>
+    <button id="quit">Exit</button>
+</div>
 <ul id="messages"></ul>
-<form action="">
+<form id="submit" action="">
     <input id="m" autocomplete="off" /><button>Send</button>
 </form>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -23,16 +27,40 @@
 <script>
     $(function () {
         let socket = io('ws://127.0.0.1:3000');
-        $('form').submit(function(e){
+        $('#id').click(function (e) {
+            $.post('/joinRoom', {
+                roomId:  $('#roomid').val()
+            }, (result) => {
+                console.log("Success, RommID: " + result);
+            });
+        });
+        $('#quit').click(() => {
+            $.ajax({
+                url: '/exit',
+                type: 'DELETE',
+                success: () => {
+                    console.log("Exited!");
+                }
+            });
+            socket.emit('exit', $('#roomid').val());
+        });
+        $('#submit').submit(function(e){
             e.preventDefault(); // prevents page reloading
-            socket.emit('sendMsg', $('#m').val());
+            socket.emit('clientMsg', $('#m').val());
             $('#m').val('');
             return false;
         });
-        socket.on('getMsg', (message) => {
+        socket.on('serverMsg', (message) => {
             console.log("Server Msg: " + message);
-            $('#messages').append($('<li>').text(message));
+            $('#messages').append($('<li>').text('ServerMsg: ' + message.message));
         });
+        socket.on('roomMsg', (message) => {
+            console.log("Spec Room Msg: " + message);
+            $('#messages').append($('<li>').text('RoomMsg: ' + message.message));
+        });
+        socket.on('disconnect', () => {
+            console.log('Disconnected');
+        })
     });
 </script>
 </body>
