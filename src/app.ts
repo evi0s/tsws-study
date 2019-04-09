@@ -29,7 +29,7 @@ let sessionOpt = {
     }
 };
 
-let server = app.listen(3000, () => {
+let server = app.listen(config.listenport, () => {
    console.log("Running");
 });
 

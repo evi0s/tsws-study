@@ -4,6 +4,8 @@
 
 let env = process.env;
 
+let listenaddr   = env.LISTENADDR               || '127.0.0.1';
+let listenport   = parseInt(env.LISTENPORT)     || 3000;
 let databasehost = env.DATABASE_HOST            || 'localhost';
 let databaseport = parseInt(env.DATABASE_PORT)  ||  27017;
 let databaseuser = env.DATABASE_USER            || '';
@@ -20,6 +22,8 @@ if ( env.SESS_KEY ) {
 }
 
 export {
+    listenaddr,
+    listenport,
     databasehost,
     databaseport,
     databaseuser,

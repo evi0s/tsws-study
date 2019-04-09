@@ -13,17 +13,16 @@ if (! (databaseuser || databasepass)) {
 debug(`Connection URI is ${URL}`);
 
 class Mongo {
-    private Connection:any = null;
+    private Connection: any = null;
 
     constructor () {
-        Mongoose.connect(URL, {useNewUrlParser: true})
-            .then((connection) => {
-                this.Connection = connection;
-            })
-            .catch((err) => {
-                debug(`Error in connecting to database: ${err.message}`);
-                throw err;
-            });
+        try {
+            this.Connection = Mongoose.connect(URL, {useNewUrlParser: true});
+        } catch (err) {
+            debug(`Error in connecting to database: ${err.message}`);
+            throw err;
+        }
+
     }
 
     async getInstance () {

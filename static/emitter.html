@@ -21,15 +21,15 @@
 <script src="https://cdn.bootcss.com/socket.io/2.2.0/socket.io.js"></script>
 <script>
     $(() => {
-        let socket = io('ws://127.0.0.1');
+        let socket = io('ws://127.0.0.1:3000');
         let Interval;
         $('#emit').click(() => {
             Interval = setInterval(() => {
-                socket.emit('sendMsg', $('#message').val())
+                socket.emit('clientMsg', $('#message').val())
             }, parseInt($('#time').val()))
         });
 
-        socket.on('getMsg', (msg) => {
+        socket.on('serverMsg', (msg) => {
             console.log(msg);
         });
 
